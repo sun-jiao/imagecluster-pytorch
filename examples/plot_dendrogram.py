@@ -11,7 +11,7 @@ if __name__ == '__main__':
     images = io.read_images('stellera/', size=(224, 224))
     model = calc.get_model()
     fingerprints = calc.fingerprints(images, model)
-    clusters, extra = calc.cluster(fingerprints, sim=0.5, extra_out=True)
+    clusters, extra = calc.cluster(fingerprints, sim=0.5, extra_out=True, alpha=0)
 
     # linkage matrix Z
     fig, ax = plt.subplots(figsize = (20, 40))
