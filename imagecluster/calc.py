@@ -260,7 +260,7 @@ def cluster(fingerprints, sim=0.5, timestamps=None, alpha=0.3, method='average',
     if print_stats:
         print_cluster_stats(clusters)
     if extra_out:
-        extra = {'Z': Z, 'dfps': dfps, 'cluster_dct': cluster_dct, 'cut': cut}
+        extra = {'Z': Z, 'dfps': dfps, 'cluster_dct': cluster_dct, 'cut': cut, 'labels': np.asarray(files)}
         return clusters, extra
     else:
         return clusters

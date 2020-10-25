@@ -10,3 +10,4 @@ doc/sphinx-autodoc
 pics/*
 clusters/*
 examples/pics/*
+examples/*.png
