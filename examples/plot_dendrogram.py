@@ -14,6 +14,8 @@ if __name__ == '__main__':
     clusters, extra = calc.cluster(fingerprints, sim=0.5, extra_out=True, alpha=0)
 
     # linkage matrix Z
+    plt.subplots_adjust(left=0.18, wspace=0.25, hspace=0.25,
+                        bottom=0.13, top=0.91)
     fig, ax = plt.subplots(figsize = (20, 40))
     dendrogram(extra['Z'], ax=ax, orientation='left', labels=extra['labels'])
 
