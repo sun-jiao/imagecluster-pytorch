@@ -1,13 +1,15 @@
 import os
 from collections import OrderedDict
 
+import torch
+import torch.cuda
+import torchvision.models as models
+from torch.autograd import Variable
+
 import numpy as np
 from scipy.spatial import distance
 from scipy.cluster import hierarchy
 from sklearn.decomposition import PCA
-
-from keras.applications.vgg16 import VGG16, preprocess_input
-from keras.models import Model
 
 
 pj = os.path.join
@@ -43,9 +45,12 @@ def get_model(layer='fc2'):
             _________________________________________________________________
             predictions (Dense)          (None, 1000)              4097000
     """
-    base_model = VGG16(weights='imagenet', include_top=True)
-    model = Model(inputs=base_model.input,
-                  outputs=base_model.get_layer(layer).output)
+    model = models.vgg16(pretrained=True)
+    model.features = model.features[:]
+    model.classifier = model.classifier[:4]
+
+    model = model.eval()
+    # model.cuda()  # send the model to GPU, DO NOT include this line if you haven't a GPU
     return model
 
 
@@ -77,15 +82,21 @@ def fingerprint(image, model):
     # VGG16).
     #
     # We assme channels_last here. Fix if needed.
-    if image.shape[2] == 1:
-        image = image.repeat(3, axis=2)
+
+    image = torch.from_numpy(image)
+
+    if image.shape[0] == 1:  # [1, 224, 224]
+        image = image.repeat(3, 1, 1)  # [3, 224, 224]
+
+    tensor = Variable(torch.unsqueeze(image, dim=0).float(), requires_grad=False) #[1, 3, 224, 224]
+    # tensor = tensor.cuda()  # DO NOT include this line if you haven't a GPU
 
     # (1, 224, 224, 3)
-    arr4d = np.expand_dims(image, axis=0)
+    arr4d = model(Variable(tensor))
 
     # (1, 224, 224, 3)
-    arr4d_pp = preprocess_input(arr4d)
-    return model.predict(arr4d_pp)[0,:]
+    arr4d_pp = arr4d.data.cpu().numpy()
+    return arr4d_pp.flatten()
 
 
 # Cannot use multiprocessing (only tensorflow backend tested, rumor has it that

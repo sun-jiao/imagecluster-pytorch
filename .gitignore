@@ -6,3 +6,7 @@ build/
 doc/build
 doc/source/generated
 doc/sphinx-autodoc
+.idea/*
+pics/*
+clusters/*
+examples/pics/*

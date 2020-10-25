@@ -5,7 +5,7 @@ import os
 import pickle
 import re
 
-from keras.preprocessing import image
+import torchvision.transforms as transforms
 import PIL.Image
 
 from . import exceptions
@@ -15,6 +15,7 @@ pj = os.path.join
 
 ic_base_dir = 'imagecluster'
 
+transform_to_tensor = transforms.ToTensor()
 
 def read_pk(filename):
     """Read pickled data from `filename`."""
@@ -147,8 +148,10 @@ def _image_worker(filename, size):
     # ground when reading data from disk :-)
     try:
         print(filename)
-        img = PIL.Image.open(filename).convert('RGB').resize(size, resample=3)
-        arr = image.img_to_array(img, dtype=int)
+        image = PIL.Image.open(filename).convert('RGB').resize(size, resample=3)
+        image = image.resize(size)
+        tensor = transform_to_tensor(image)  # convert image to tensor
+        arr = tensor.numpy()
         return filename, arr
     except OSError as ex:
         print(f"skipping {filename}: {ex}")

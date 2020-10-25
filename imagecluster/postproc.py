@@ -32,7 +32,7 @@ def plot_clusters(clusters, images, max_csize=None, mem_limit=1024**3):
     ncols = stats[:,1].sum()
     # csize (number of images per cluster)
     nrows = stats[:,0].max()
-    shape = images[list(images.keys())[0]].shape[:2]
+    shape = images[list(images.keys())[0]].shape[1:]
     mem = nrows * shape[0] * ncols * shape[1] * 3
     if mem > mem_limit:
         raise Exception(f"size of plot array ({mem/1024**2} MiB) > mem_limit "
@@ -45,7 +45,7 @@ def plot_clusters(clusters, images, max_csize=None, mem_limit=1024**3):
         for cluster in clusters[csize]:
             icol += 1
             for irow, filename in enumerate(cluster):
-                image = images[filename]
+                image = images[filename].transpose(2,1,0)
                 arr[irow*shape[0]:(irow+1)*shape[0],
                     icol*shape[1]:(icol+1)*shape[1], :] = image
     print(f"plot array ({arr.dtype}) size: {arr.nbytes/1024**2} MiB")
