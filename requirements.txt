@@ -3,6 +3,7 @@ scipy
 setuptools
 torchvision
 torch
+
 numpy
 Pillow
 scikit-learn
