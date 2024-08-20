@@ -1,14 +1,12 @@
 #!/usr/bin/env python3
-
-from matplotlib import pyplot as plt
 import numpy as np
+from matplotlib import pyplot as plt
 from scipy.cluster.hierarchy import dendrogram
 
 from imagecluster import calc, io
 
-
 if __name__ == '__main__':
-    images = io.read_images('stellera/', size=(224, 224))
+    images = io.read_images('pics/', size=(224, 224))
     model = calc.get_model()
     fingerprints = calc.fingerprints(images, model)
     clusters, extra = calc.cluster(fingerprints, sim=0.5, extra_out=True, alpha=0)

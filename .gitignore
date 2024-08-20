@@ -13,3 +13,5 @@ examples/pics/*
 examples/*.png
 examples/androsace/*
 examples/images/*
+*.pt
+*.pth
